@@ -3,24 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>リフォームローンシミュレーション</title>
+    <title>リフォームローンシミュレーション | 簡単試算</title>
     <style>
         :root {
-            --primary-color: #2563eb;
-            --primary-dark: #1e40af;
-            --primary-light: #93c5fd;
-            --secondary-color: #f0f9ff;
-            --accent-color: #ef4444;
-            --success-color: #22c55e;
-            --warning-color: #f59e0b;
-            --text-dark: #1e293b;
-            --text-light: #64748b;
-            --border-color: #e2e8f0;
-            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-            --shadow-lg: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --border-radius: 16px;
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #a5b4fc;
+            --secondary: #f0f9ff;
+            --accent: #f43f5e;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border: #e2e8f0;
+            --bg-card: #ffffff;
+            --bg-hover: #f8fafc;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 40px rgba(0,0,0,0.15);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -31,153 +37,328 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Noto Sans JP', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', 'Helvetica Neue', 'Noto Sans JP', -apple-system, sans-serif;
+            background: linear-gradient(180deg, #e0e7ff 0%, #f0f9ff 100%);
             min-height: 100vh;
-            color: var(--text-dark);
+            color: var(--text-primary);
             line-height: 1.6;
-            padding: 20px 0;
         }
 
-        /* アイコン */
-        .icon {
-            display: inline-block;
-            width: 1em;
-            height: 1em;
-            vertical-align: middle;
-            margin-right: 0.5em;
-        }
-
-        .icon-home::before { content: "🏠"; }
-        .icon-calculator::before { content: "🧮"; }
-        .icon-yen::before { content: "¥"; font-weight: bold; }
-        .icon-calendar::before { content: "📅"; }
-        .icon-percent::before { content: "%"; font-weight: bold; }
-        .icon-settings::before { content: "⚙️"; }
-        .icon-exchange::before { content: "🔄"; }
-        .icon-gift::before { content: "🎁"; }
-        .icon-chart::before { content: "📊"; }
-        .icon-info::before { content: "ℹ️"; }
-        .icon-lightbulb::before { content: "💡"; }
-        .icon-help::before { content: "❓"; }
-        .icon-check::before { content: "✅"; }
-        .icon-arrow-up::before { content: "↑"; color: var(--accent-color); }
-        .icon-arrow-down::before { content: "↓"; color: var(--success-color); }
-        .icon-table::before { content: "📋"; }
-
-        .container {
-            max-width: 1000px;
+        /* コンテナ */
+        .app-container {
+            max-width: 1200px;
             margin: 0 auto;
-            background: white;
-            box-shadow: var(--shadow-lg);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            animation: slideUp 0.6s ease;
+            padding: 20px;
         }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header {
-            background: var(--gradient-primary);
-            color: white;
-            padding: 60px 30px;
+        /* ヘッダー */
+        .app-header {
             text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            background: white;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
             position: relative;
             overflow: hidden;
         }
 
-        .header::before {
+        .app-header::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 50%, var(--primary) 100%);
+            animation: gradient-move 3s ease infinite;
         }
 
-        .header-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .header h1 {
-            font-size: 36px;
-            margin-bottom: 12px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .header p {
-            font-size: 18px;
-            opacity: 0.95;
-            font-weight: 400;
-            margin-top: 8px;
+        @keyframes gradient-move {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .header-icon {
-            font-size: 64px;
-            margin-bottom: 24px;
-            animation: bounce 2s ease-in-out infinite;
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            margin: 0 auto 20px;
+            box-shadow: var(--shadow-lg);
+            animation: float 3s ease-in-out infinite;
         }
 
-        @keyframes bounce {
+        @keyframes float {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
         }
 
-        .content {
-            padding: 48px 32px;
+        .app-title {
+            font-size: clamp(24px, 4vw, 36px);
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
         }
 
-        .progress-section {
-            margin-bottom: 48px;
+        .app-subtitle {
+            font-size: clamp(14px, 2vw, 18px);
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* カード共通スタイル */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            padding: 30px;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-xl);
+            transform: translateY(-2px);
+        }
+
+        /* フォームカード */
+        .form-card {
+            position: relative;
+        }
+
+        .form-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .form-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--primary-light);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .form-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        /* フォームグループ */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .required-badge {
+            background: var(--accent);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .help-icon {
+            width: 18px;
+            height: 18px;
+            background: var(--text-muted);
+            color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: help;
+            position: relative;
+        }
+
+        .help-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-primary);
+            color: white;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            margin-bottom: 5px;
+        }
+
+        .help-icon:hover .help-tooltip {
+            opacity: 1;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-family: inherit;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .input-suffix {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        /* スライダー入力 */
+        .slider-container {
+            margin-top: 12px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: var(--primary-dark);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            border: none;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* サイドバー */
+        .sidebar {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .progress-card {
+            margin-bottom: 20px;
         }
 
         .progress-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
         }
 
-        .progress-label {
-            font-size: 14px;
-            color: var(--text-light);
+        .progress-title {
+            font-size: 16px;
             font-weight: 600;
+            color: var(--text-primary);
         }
 
         .progress-value {
-            font-size: 14px;
-            color: var(--primary-color);
-            font-weight: 700;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary);
         }
 
         .progress-bar {
-            width: 100%;
             height: 8px;
-            background: var(--border-color);
-            border-radius: 100px;
+            background: var(--border);
+            border-radius: 4px;
             overflow: hidden;
-            position: relative;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
-            width: 0%;
-            border-radius: 100px;
-            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: 4px;
+            transition: width 0.6s ease;
             position: relative;
         }
 
@@ -197,175 +378,52 @@
             100% { transform: translateX(100%); }
         }
 
-        .form-section {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 32px;
-            margin-bottom: 24px;
-            border: 2px solid var(--border-color);
-            transition: var(--transition);
-        }
-
-        .form-section:hover {
-            border-color: var(--primary-light);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .section-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .form-group {
-            margin-bottom: 28px;
-        }
-
-        .form-group label {
-            display: flex;
-            align-items: center;
-            margin-bottom: 12px;
-            font-weight: 600;
-            color: var(--text-dark);
-            font-size: 15px;
-        }
-
-        .label-badge {
-            display: inline-block;
-            background: var(--primary-light);
-            color: var(--primary-dark);
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            margin-left: 8px;
-            font-weight: 600;
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        .form-group input, 
-        .form-group select {
-            width: 100%;
-            padding: 14px 18px;
-            padding-right: 45px;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            font-size: 16px;
-            transition: var(--transition);
-            background: white;
-            font-family: inherit;
-        }
-
-        .form-group input:focus, 
-        .form-group select:focus {
-            border-color: var(--primary-color);
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-        }
-
-        .input-icon {
-            position: absolute;
-            right: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-light);
-            font-size: 18px;
-            pointer-events: none;
-        }
-
-        .input-slider {
-            width: 100%;
-            margin-top: 12px;
-        }
-
-        .slider {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 6px;
-            border-radius: 5px;
-            background: var(--border-color);
-            outline: none;
-            transition: var(--transition);
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .slider::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-            background: var(--primary-dark);
-        }
-
-        .range-display {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 8px;
-            font-size: 13px;
-            color: var(--text-light);
-        }
-
+        /* 計算ボタン */
         .calculate-btn {
             width: 100%;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
-            padding: 20px 32px;
-            border-radius: 12px;
-            font-size: 18px;
+            border-radius: var(--radius-md);
+            font-size: 16px;
             font-weight: 700;
             cursor: pointer;
-            margin: 40px 0 32px;
             transition: var(--transition);
-            position: relative;
-            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            letter-spacing: 0.5px;
         }
 
-        .calculate-btn:hover {
+        .calculate-btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
         }
 
-        .calculate-btn:active {
+        .calculate-btn:active:not(:disabled) {
             transform: translateY(0);
         }
 
-        .calculate-btn.loading {
-            opacity: 0.8;
-            pointer-events: none;
+        .calculate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
-        .calculate-btn.loading::after {
-            content: '';
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            top: 50%;
-            left: 50%;
-            margin-left: -12px;
-            margin-top: -12px;
+        .btn-icon {
+            font-size: 20px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
             border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
             border-top-color: white;
+            border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
 
@@ -373,12 +431,8 @@
             to { transform: rotate(360deg); }
         }
 
-        .result {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-            border: 2px solid var(--primary-light);
-            border-radius: var(--border-radius);
-            padding: 40px;
-            margin-top: 40px;
+        /* 結果セクション */
+        .results-section {
             display: none;
             animation: fadeInUp 0.6s ease;
         }
@@ -394,110 +448,124 @@
             }
         }
 
-        .result h3 {
-            color: var(--text-dark);
-            margin-bottom: 32px;
-            font-size: 28px;
+        .results-header {
             text-align: center;
-            font-weight: 800;
+            margin-bottom: 30px;
         }
 
-        .result-grid {
+        .results-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .results-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
-        .result-card {
+        .result-item {
             background: white;
-            border-radius: 12px;
-            padding: 24px;
+            border-radius: var(--radius-md);
+            padding: 20px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-sm);
             transition: var(--transition);
             border: 2px solid transparent;
         }
 
-        .result-card:hover {
+        .result-item:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-lg);
             border-color: var(--primary-light);
         }
 
-        .result-card.highlight {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            border-color: var(--warning-color);
+        .result-item.primary {
+            background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
+            border-color: var(--warning);
         }
 
         .result-label {
-            font-size: 13px;
-            color: var(--text-light);
-            margin-bottom: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            font-weight: 600;
-        }
-
-        .result-value {
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--primary-dark);
             margin-bottom: 8px;
         }
 
-        .result-card.highlight .result-value {
-            color: var(--accent-color);
+        .result-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-dark);
+            margin-bottom: 4px;
+        }
+
+        .result-item.primary .result-value {
+            font-size: 28px;
+            color: var(--accent);
         }
 
         .result-change {
-            font-size: 13px;
-            padding: 4px 12px;
-            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
             font-weight: 600;
-            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
         }
 
-        .change-positive {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--accent-color);
+        .change-up {
+            background: rgba(244, 63, 94, 0.1);
+            color: var(--accent);
         }
 
-        .change-negative {
-            background: rgba(34, 197, 94, 0.1);
-            color: var(--success-color);
+        .change-down {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
         }
 
-        .change-neutral {
-            background: rgba(100, 116, 139, 0.1);
-            color: var(--text-light);
+        .change-none {
+            background: var(--bg-hover);
+            color: var(--text-muted);
         }
 
-        .comparison-toggle {
-            margin-top: 32px;
-            text-align: center;
+        /* テーブル表示 */
+        .schedule-section {
+            margin-top: 30px;
         }
 
-        .toggle-btn {
-            background: var(--primary-color);
+        .toggle-schedule-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 0 auto 20px;
+            padding: 10px 20px;
+            background: var(--primary);
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 24px;
-            font-size: 15px;
+            border-radius: 20px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
         }
 
-        .toggle-btn:hover {
+        .toggle-schedule-btn:hover {
             background: var(--primary-dark);
-            transform: translateY(-2px);
+            transform: scale(1.05);
         }
 
-        .comparison-table {
-            margin-top: 24px;
+        .schedule-table-wrapper {
             display: none;
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
             animation: fadeIn 0.4s ease;
         }
 
@@ -506,54 +574,57 @@
             to { opacity: 1; }
         }
 
-        .table-wrapper {
-            overflow-x: auto;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-        }
-
-        table {
+        .schedule-table {
             width: 100%;
-            border-collapse: collapse;
             background: white;
+            border-collapse: collapse;
         }
 
-        th, td {
-            padding: 14px 16px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th {
-            background: var(--primary-color);
+        .schedule-table th {
+            background: var(--primary);
             color: white;
-            font-weight: 600;
+            padding: 12px;
+            text-align: left;
             font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: 600;
         }
 
-        td {
-            font-size: 15px;
+        .schedule-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
         }
 
-        tr:hover td {
-            background: var(--secondary-color);
+        .schedule-table tr:hover td {
+            background: var(--bg-hover);
         }
 
-        .tips {
-            background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
-            border-radius: var(--border-radius);
-            padding: 32px;
+        /* ヒントカード */
+        .tips-section {
             margin-top: 40px;
-            border: 2px solid #fbbf24;
         }
 
-        .tips h4 {
-            color: var(--text-dark);
+        .tips-card {
+            background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%);
+            border: 2px solid var(--primary-light);
+            padding: 30px;
+        }
+
+        .tips-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             margin-bottom: 20px;
+        }
+
+        .tips-icon {
+            font-size: 32px;
+        }
+
+        .tips-title {
             font-size: 20px;
             font-weight: 700;
+            color: var(--text-primary);
         }
 
         .tips-grid {
@@ -564,146 +635,141 @@
 
         .tip-item {
             background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 16px;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
             transition: var(--transition);
         }
 
         .tip-item:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-md);
         }
 
-        .tip-item strong {
-            display: block;
+        .tip-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
             color: var(--primary-dark);
             margin-bottom: 8px;
-            font-size: 16px;
         }
 
-        .notes {
-            background: white;
-            border: 2px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 32px;
-            margin-top: 24px;
+        .tip-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
         }
 
-        .notes h4 {
-            color: var(--text-dark);
-            margin-bottom: 20px;
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .notes ul {
-            list-style: none;
-        }
-
-        .notes li {
-            margin-bottom: 12px;
-            padding-left: 28px;
-            position: relative;
-            color: var(--text-light);
-            line-height: 1.8;
-        }
-
-        .notes li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--success-color);
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .floating-help {
+        /* フローティングボタン */
+        .floating-btn {
             position: fixed;
-            bottom: 32px;
-            right: 32px;
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             border-radius: 50%;
             border: none;
             color: white;
-            font-size: 28px;
+            font-size: 24px;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
             transition: var(--transition);
-            z-index: 1000;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .floating-help:hover {
+        .floating-btn:hover {
             transform: scale(1.1) rotate(15deg);
-            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.4);
+            box-shadow: 0 6px 30px rgba(99, 102, 241, 0.4);
         }
 
-        .tooltip {
-            position: relative;
-            display: inline-block;
+        /* モーダル */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
-        .tooltip-text {
-            visibility: hidden;
-            width: 240px;
-            background-color: var(--text-dark);
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-xl);
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 30px 30px 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal-body {
+            padding: 30px;
+            line-height: 1.8;
+        }
+
+        .modal-close {
+            padding: 12px 24px;
+            background: var(--primary);
             color: white;
-            text-align: center;
-            border-radius: 8px;
-            padding: 12px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -120px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 13px;
-            box-shadow: var(--shadow-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: var(--transition);
         }
 
-        .tooltip-text::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: var(--text-dark) transparent transparent transparent;
+        .modal-close:hover {
+            background: var(--primary-dark);
         }
 
-        .tooltip:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        /* レスポンシブデザイン */
+        /* レスポンシブ */
         @media (max-width: 768px) {
-            .container {
-                margin: 0;
-                border-radius: 0;
+            .app-container {
+                padding: 10px;
             }
 
-            .header {
-                padding: 40px 24px;
+            .card {
+                padding: 20px;
             }
 
-            .header h1 {
-                font-size: 28px;
-            }
-
-            .content {
-                padding: 32px 20px;
-            }
-
-            .form-section {
-                padding: 24px;
-            }
-
-            .result-grid {
+            .results-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -711,86 +777,77 @@
                 grid-template-columns: 1fr;
             }
 
-            .floating-help {
-                bottom: 24px;
-                right: 24px;
-                width: 56px;
-                height: 56px;
-                font-size: 24px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 24px;
-            }
-
-            .header p {
-                font-size: 16px;
-            }
-
-            .section-title {
-                font-size: 18px;
-            }
-
-            .result-value {
-                font-size: 24px;
+            .floating-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+                bottom: 20px;
+                right: 20px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="header-content">
-                <div class="header-icon">🏠</div>
-                <h1>リフォームローンシミュレーション</h1>
-                <p>理想のリフォームプランを実現するための資金計画をサポート</p>
-            </div>
-        </div>
+    <div class="app-container">
+        <!-- ヘッダー -->
+        <header class="app-header">
+            <div class="header-icon">🏠</div>
+            <h1 class="app-title">リフォームローンシミュレーション</h1>
+            <p class="app-subtitle">簡単3ステップで月々の返済額を試算</p>
+        </header>
 
-        <div class="content">
-            <div class="progress-section">
-                <div class="progress-header">
-                    <span class="progress-label">入力完了度</span>
-                    <span class="progress-value" id="progressValue">0%</span>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-            </div>
-
-            <form id="loanForm">
-                <div class="form-section">
-                    <h3 class="section-title">
-                        <span class="icon icon-calculator"></span>
-                        基本条件
-                    </h3>
-                    
-                    <div class="form-group">
-                        <label for="loanAmount">
-                            借入希望額
-                            <span class="label-badge">必須</span>
-                        </label>
-                        <div class="input-wrapper">
-                            <input type="number" id="loanAmount" min="10" max="1500" step="1" value="300" required>
-                            <span class="input-icon">万円</span>
+        <!-- メインコンテンツ -->
+        <div class="main-content">
+            <!-- フォームエリア -->
+            <div class="form-area">
+                <form id="loanForm">
+                    <!-- 基本条件 -->
+                    <div class="card form-card">
+                        <div class="form-header">
+                            <div class="form-icon">📊</div>
+                            <h2 class="form-title">基本条件</h2>
                         </div>
-                        <input type="range" class="slider input-slider" id="loanAmountSlider" min="10" max="1500" value="300">
-                        <div class="range-display">
-                            <span>10万円</span>
-                            <span id="loanAmountDisplay">300万円</span>
-                            <span>1,500万円</span>
-                        </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="loanPeriod">
-                            返済期間
-                            <span class="label-badge">必須</span>
-                        </label>
-                        <div class="input-wrapper">
-                            <select id="loanPeriod" required>
+                        <div class="form-group">
+                            <label class="form-label">
+                                借入希望額
+                                <span class="required-badge">必須</span>
+                                <span class="help-icon">
+                                    ?
+                                    <span class="help-tooltip">10万円〜1,500万円の範囲で入力</span>
+                                </span>
+                            </label>
+                            <div class="input-group">
+                                <input type="number" 
+                                       class="form-input" 
+                                       id="loanAmount" 
+                                       min="10" 
+                                       max="1500" 
+                                       value="300" 
+                                       required>
+                                <span class="input-suffix">万円</span>
+                            </div>
+                            <div class="slider-container">
+                                <input type="range" 
+                                       class="slider" 
+                                       id="loanAmountSlider" 
+                                       min="10" 
+                                       max="1500" 
+                                       value="300">
+                                <div class="slider-labels">
+                                    <span>10万円</span>
+                                    <span id="loanAmountDisplay">300万円</span>
+                                    <span>1,500万円</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                返済期間
+                                <span class="required-badge">必須</span>
+                            </label>
+                            <select class="form-select" id="loanPeriod" required>
                                 <option value="">選択してください</option>
                                 <option value="1">1年</option>
                                 <option value="2">2年</option>
@@ -801,61 +858,69 @@
                                 <option value="15">15年</option>
                                 <option value="20">20年</option>
                             </select>
-                            <span class="input-icon icon icon-calendar"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                金利（年率）
+                                <span class="required-badge">必須</span>
+                                <span class="help-icon">
+                                    ?
+                                    <span class="help-tooltip">一般的に2〜4%程度</span>
+                                </span>
+                            </label>
+                            <div class="input-group">
+                                <input type="number" 
+                                       class="form-input" 
+                                       id="interestRate" 
+                                       min="0.1" 
+                                       max="15" 
+                                       step="0.01" 
+                                       value="2.8" 
+                                       required>
+                                <span class="input-suffix">%</span>
+                            </div>
+                            <div class="slider-container">
+                                <input type="range" 
+                                       class="slider" 
+                                       id="interestRateSlider" 
+                                       min="0.1" 
+                                       max="15" 
+                                       step="0.1" 
+                                       value="2.8">
+                                <div class="slider-labels">
+                                    <span>0.1%</span>
+                                    <span id="interestRateDisplay">2.8%</span>
+                                    <span>15%</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="interestRate">
-                            金利（年率）
-                            <span class="label-badge">必須</span>
-                            <span class="tooltip">
-                                <span style="color: var(--primary-color); cursor: help;">ⓘ</span>
-                                <span class="tooltip-text">現在の市場金利を参考に入力してください。一般的には2-4%程度です。</span>
-                            </span>
-                        </label>
-                        <div class="input-wrapper">
-                            <input type="number" id="interestRate" min="0.1" max="15" step="0.01" value="2.8" required>
-                            <span class="input-icon">%</span>
+                    <!-- 詳細設定 -->
+                    <div class="card form-card" style="margin-top: 20px;">
+                        <div class="form-header">
+                            <div class="form-icon">⚙️</div>
+                            <h2 class="form-title">詳細設定</h2>
                         </div>
-                        <input type="range" class="slider input-slider" id="interestRateSlider" min="0.1" max="15" step="0.1" value="2.8">
-                        <div class="range-display">
-                            <span>0.1%</span>
-                            <span id="interestRateDisplay">2.8%</span>
-                            <span>15%</span>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="form-section">
-                    <h3 class="section-title">
-                        <span class="icon icon-settings"></span>
-                        詳細設定
-                    </h3>
-
-                    <div class="form-group">
-                        <label for="paymentType">
-                            返済方法
-                            <span class="tooltip">
-                                <span style="color: var(--primary-color); cursor: help;">ⓘ</span>
-                                <span class="tooltip-text">元利均等：毎月の返済額が一定<br>元金均等：毎月の元金返済額が一定</span>
-                            </span>
-                        </label>
-                        <div class="input-wrapper">
-                            <select id="paymentType" required>
-                                <option value="equal">元利均等返済（毎月一定額）</option>
-                                <option value="principal">元金均等返済（元金一定額）</option>
+                        <div class="form-group">
+                            <label class="form-label">
+                                返済方法
+                                <span class="help-icon">
+                                    ?
+                                    <span class="help-tooltip" style="width: 250px;">元利均等：毎月一定額、元金均等：元金が一定</span>
+                                </span>
+                            </label>
+                            <select class="form-select" id="paymentType">
+                                <option value="equal">元利均等返済</option>
+                                <option value="principal">元金均等返済</option>
                             </select>
-                            <span class="input-icon icon icon-exchange"></span>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <label for="bonusRatio">
-                            ボーナス返済割合
-                        </label>
-                        <div class="input-wrapper">
-                            <select id="bonusRatio">
+                        <div class="form-group">
+                            <label class="form-label">ボーナス返済割合</label>
+                            <select class="form-select" id="bonusRatio">
                                 <option value="0">なし</option>
                                 <option value="10">10%</option>
                                 <option value="20">20%</option>
@@ -863,62 +928,84 @@
                                 <option value="40">40%</option>
                                 <option value="50">50%</option>
                             </select>
-                            <span class="input-icon icon icon-gift"></span>
                         </div>
                     </div>
+                </form>
+            </div>
+
+            <!-- サイドバー -->
+            <aside class="sidebar">
+                <!-- 進捗カード -->
+                <div class="card progress-card">
+                    <div class="progress-header">
+                        <span class="progress-title">入力完了度</span>
+                        <span class="progress-value" id="progressValue">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+                    </div>
                 </div>
 
-                <button type="submit" class="calculate-btn" id="calculateBtn">
-                    <span class="btn-text">
-                        <span class="icon icon-calculator"></span>
-                        シミュレーション実行
-                    </span>
+                <!-- 計算ボタン -->
+                <button class="calculate-btn" id="calculateBtn" onclick="calculateLoan()">
+                    <span class="btn-icon">📱</span>
+                    <span>シミュレーション実行</span>
                 </button>
-            </form>
 
-            <div id="result" class="result">
-                <h3>
-                    <span class="icon icon-chart"></span>
-                    シミュレーション結果
-                </h3>
-                <div class="result-grid">
-                    <div class="result-card highlight">
+                <!-- クイックヒント -->
+                <div class="card" style="margin-top: 20px;">
+                    <h3 style="font-size: 16px; margin-bottom: 12px; color: var(--text-primary);">💡 クイックヒント</h3>
+                    <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6;">
+                        スライダーを使って金額や金利を調整できます。前回の計算結果との比較も自動表示されます。
+                    </p>
+                </div>
+            </aside>
+        </div>
+
+        <!-- 結果セクション -->
+        <div class="results-section" id="resultsSection">
+            <div class="card">
+                <div class="results-header">
+                    <h2 class="results-title">📊 シミュレーション結果</h2>
+                </div>
+
+                <div class="results-grid">
+                    <div class="result-item primary">
                         <div class="result-label">毎月の返済額</div>
                         <div class="result-value" id="monthlyPayment">-</div>
-                        <div class="result-change change-neutral" id="monthlyChange">-</div>
+                        <div class="result-change change-none" id="monthlyChange">初回計算</div>
                     </div>
-                    <div class="result-card">
-                        <div class="result-label">ボーナス時加算額</div>
+                    <div class="result-item">
+                        <div class="result-label">ボーナス時加算</div>
                         <div class="result-value" id="bonusPayment">-</div>
-                        <div class="result-change change-neutral" id="bonusChange">-</div>
+                        <div class="result-change change-none" id="bonusChange">-</div>
                     </div>
-                    <div class="result-card">
+                    <div class="result-item">
                         <div class="result-label">年間返済額</div>
                         <div class="result-value" id="annualPayment">-</div>
-                        <div class="result-change change-neutral" id="annualChange">-</div>
+                        <div class="result-change change-none" id="annualChange">-</div>
                     </div>
-                    <div class="result-card">
+                    <div class="result-item">
                         <div class="result-label">総返済額</div>
                         <div class="result-value" id="totalPayment">-</div>
-                        <div class="result-change change-neutral" id="totalChange">-</div>
+                        <div class="result-change change-none" id="totalChange">-</div>
                     </div>
-                    <div class="result-card">
+                    <div class="result-item">
                         <div class="result-label">利息総額</div>
                         <div class="result-value" id="totalInterest">-</div>
-                        <div class="result-change change-neutral" id="interestChange">-</div>
+                        <div class="result-change change-none" id="interestChange">-</div>
                     </div>
                 </div>
 
-                <div class="comparison-toggle">
-                    <button class="toggle-btn" onclick="toggleComparison()">
-                        <span class="icon icon-table"></span>
-                        返済スケジュール表示
+                <!-- 返済スケジュール -->
+                <div class="schedule-section">
+                    <button class="toggle-schedule-btn" onclick="toggleSchedule()">
+                        <span>📅</span>
+                        <span id="scheduleToggleText">返済スケジュールを表示</span>
                     </button>
-                </div>
 
-                <div class="comparison-table" id="comparisonTable">
-                    <div class="table-wrapper">
-                        <table id="scheduleTable">
+                    <div class="schedule-table-wrapper" id="scheduleWrapper">
+                        <table class="schedule-table">
                             <thead>
                                 <tr>
                                     <th>回数</th>
@@ -928,279 +1015,349 @@
                                     <th>残高</th>
                                 </tr>
                             </thead>
-                            <tbody id="scheduleBody">
-                            </tbody>
+                            <tbody id="scheduleBody"></tbody>
                         </table>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="tips">
-                <h4>
-                    <span class="icon icon-lightbulb"></span>
-                    賢いリフォームローン活用のポイント
-                </h4>
+        <!-- ヒントセクション -->
+        <div class="tips-section">
+            <div class="card tips-card">
+                <div class="tips-header">
+                    <span class="tips-icon">💡</span>
+                    <h2 class="tips-title">賢いリフォームローン活用術</h2>
+                </div>
                 <div class="tips-grid">
                     <div class="tip-item">
-                        <strong>🏦 金利の比較検討</strong>
-                        複数の金融機関から見積もりを取り、最適な条件を選びましょう
+                        <div class="tip-title">
+                            <span>🏦</span>
+                            <span>金利の比較検討</span>
+                        </div>
+                        <div class="tip-text">
+                            複数の金融機関で見積もりを取り、最も有利な条件を選びましょう
+                        </div>
                     </div>
                     <div class="tip-item">
-                        <strong>⏰ 返済期間の最適化</strong>
-                        月々の負担と総利息のバランスを考慮して期間を設定しましょう
+                        <div class="tip-title">
+                            <span>⏰</span>
+                            <span>返済期間の最適化</span>
+                        </div>
+                        <div class="tip-text">
+                            月々の負担と総利息のバランスを考慮して期間を設定しましょう
+                        </div>
                     </div>
                     <div class="tip-item">
-                        <strong>💰 ボーナス返済の活用</strong>
-                        安定したボーナスがある場合は、返済期間短縮に効果的です
+                        <div class="tip-title">
+                            <span>💰</span>
+                            <span>ボーナス返済の活用</span>
+                        </div>
+                        <div class="tip-text">
+                            安定した収入がある場合は、返済期間の短縮に効果的です
+                        </div>
                     </div>
                     <div class="tip-item">
-                        <strong>📈 金利タイプの選択</strong>
-                        固定金利と変動金利のメリット・デメリットを理解しましょう
+                        <div class="tip-title">
+                            <span>📈</span>
+                            <span>繰上返済の検討</span>
+                        </div>
+                        <div class="tip-text">
+                            余裕がある時は繰上返済で総利息を大幅に削減できます
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="notes">
-                <h4>
-                    <span class="icon icon-info"></span>
-                    ご利用にあたっての注意事項
-                </h4>
-                <ul>
-                    <li>本シミュレーションは概算であり、実際の借入条件とは異なる場合があります</li>
-                    <li>金融機関によって審査基準や金利、手数料等が異なります</li>
-                    <li>保証料、事務手数料、団体信用生命保険料等は含まれておりません</li>
-                    <li>繰上返済手数料等、その他の費用が発生する場合があります</li>
-                    <li>実際のお借入れの際は、各金融機関の商品説明書をご確認ください</li>
-                    <li>ご返済が困難になった場合は、早めに金融機関にご相談ください</li>
-                </ul>
             </div>
         </div>
     </div>
 
-    <button class="floating-help" onclick="showHelp()">
-        <span class="icon icon-help"></span>
-    </button>
+    <!-- フローティングボタン -->
+    <button class="floating-btn" onclick="showHelp()">?</button>
+
+    <!-- ヘルプモーダル -->
+    <div class="modal" id="helpModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <span>📖</span>
+                    <span>使い方ガイド</span>
+                </h2>
+            </div>
+            <div class="modal-body">
+                <h3 style="margin-bottom: 12px; color: var(--primary);">基本的な使い方</h3>
+                <ol style="margin-bottom: 24px; padding-left: 20px;">
+                    <li><strong>借入希望額</strong>：10万円〜1,500万円の範囲で入力します</li>
+                    <li><strong>返済期間</strong>：1年〜20年から選択します</li>
+                    <li><strong>金利</strong>：年率を％単位で入力（一般的に2〜4%）</li>
+                    <li><strong>シミュレーション実行</strong>ボタンをクリック</li>
+                </ol>
+
+                <h3 style="margin-bottom: 12px; color: var(--primary);">便利な機能</h3>
+                <ul style="margin-bottom: 24px; padding-left: 20px;">
+                    <li>スライダーで金額や金利を直感的に調整</li>
+                    <li>前回の計算結果との自動比較表示</li>
+                    <li>返済スケジュール表で詳細を確認</li>
+                    <li>リアルタイムで入力完了度を表示</li>
+                </ul>
+
+                <h3 style="margin-bottom: 12px; color: var(--primary);">返済方法について</h3>
+                <p style="margin-bottom: 12px;"><strong>元利均等返済</strong>：毎月の返済額が一定。家計管理がしやすい</p>
+                <p><strong>元金均等返済</strong>：毎月の元金返済額が一定。総利息が少なくなる</p>
+
+                <button class="modal-close" onclick="closeHelp()">閉じる</button>
+            </div>
+        </div>
+    </div>
 
     <script>
+        // グローバル変数
         let lastCalculation = null;
-        
-        // スライダーと入力フィールドの同期
-        function setupSliders() {
+        let isCalculating = false;
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            updateProgress();
+        });
+
+        // イベントリスナーの設定
+        function setupEventListeners() {
             // 借入額スライダー
             const loanAmountInput = document.getElementById('loanAmount');
             const loanAmountSlider = document.getElementById('loanAmountSlider');
             const loanAmountDisplay = document.getElementById('loanAmountDisplay');
-            
+
             loanAmountSlider.addEventListener('input', function() {
                 loanAmountInput.value = this.value;
-                loanAmountDisplay.textContent = formatCurrency(this.value) + '万円';
+                loanAmountDisplay.textContent = `${formatNumber(this.value)}万円`;
                 updateProgress();
             });
-            
+
             loanAmountInput.addEventListener('input', function() {
-                loanAmountSlider.value = this.value;
-                loanAmountDisplay.textContent = formatCurrency(this.value) + '万円';
+                const value = Math.min(1500, Math.max(10, this.value));
+                loanAmountSlider.value = value;
+                loanAmountDisplay.textContent = `${formatNumber(value)}万円`;
                 updateProgress();
             });
-            
+
             // 金利スライダー
             const interestRateInput = document.getElementById('interestRate');
             const interestRateSlider = document.getElementById('interestRateSlider');
             const interestRateDisplay = document.getElementById('interestRateDisplay');
-            
+
             interestRateSlider.addEventListener('input', function() {
                 interestRateInput.value = this.value;
-                interestRateDisplay.textContent = this.value + '%';
+                interestRateDisplay.textContent = `${this.value}%`;
                 updateProgress();
             });
-            
+
             interestRateInput.addEventListener('input', function() {
-                interestRateSlider.value = this.value;
-                interestRateDisplay.textContent = this.value + '%';
+                const value = Math.min(15, Math.max(0.1, this.value));
+                interestRateSlider.value = value;
+                interestRateDisplay.textContent = `${value}%`;
                 updateProgress();
+            });
+
+            // その他のフォーム要素
+            document.querySelectorAll('select').forEach(select => {
+                select.addEventListener('change', updateProgress);
+            });
+
+            // キーボードショートカット
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    calculateLoan();
+                }
+                if (e.key === 'Escape') {
+                    closeHelp();
+                }
             });
         }
-        
-        // プログレスバーの更新
+
+        // 進捗更新
         function updateProgress() {
-            const form = document.getElementById('loanForm');
-            const inputs = form.querySelectorAll('input[required], select[required]');
+            const required = ['loanAmount', 'loanPeriod', 'interestRate'];
             let filled = 0;
-            
-            inputs.forEach(input => {
-                if (input.value.trim() !== '' && input.value !== '選択してください') {
+
+            required.forEach(id => {
+                const element = document.getElementById(id);
+                if (element && element.value && element.value !== '') {
                     filled++;
                 }
             });
-            
-            const progress = Math.round((filled / inputs.length) * 100);
-            document.getElementById('progressFill').style.width = progress + '%';
-            document.getElementById('progressValue').textContent = progress + '%';
+
+            const percentage = Math.round((filled / required.length) * 100);
+            document.getElementById('progressValue').textContent = `${percentage}%`;
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+
+            // ボタンの有効/無効
+            const calculateBtn = document.getElementById('calculateBtn');
+            if (percentage === 100) {
+                calculateBtn.disabled = false;
+            } else {
+                calculateBtn.disabled = true;
+            }
         }
 
-        // フォーム要素の監視
-        document.querySelectorAll('input, select').forEach(element => {
-            element.addEventListener('input', updateProgress);
-            element.addEventListener('change', updateProgress);
-        });
-
-        // フォーム送信処理
-        document.getElementById('loanForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const button = document.getElementById('calculateBtn');
-            button.classList.add('loading');
-            button.disabled = true;
-            
-            // アニメーション効果のための遅延
-            setTimeout(() => {
-                calculateLoan();
-                button.classList.remove('loading');
-                button.disabled = false;
-            }, 800);
-        });
-
+        // ローン計算
         function calculateLoan() {
-            const loanAmount = parseFloat(document.getElementById('loanAmount').value) * 10000;
+            if (isCalculating) return;
+
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
             const loanPeriod = parseInt(document.getElementById('loanPeriod').value);
-            const interestRate = parseFloat(document.getElementById('interestRate').value) / 100;
+            const interestRate = parseFloat(document.getElementById('interestRate').value);
             const paymentType = document.getElementById('paymentType').value;
             const bonusRatio = parseFloat(document.getElementById('bonusRatio').value) / 100;
 
             if (!loanAmount || !loanPeriod || !interestRate) {
-                alert('すべての必須項目を入力してください。');
+                alert('必須項目をすべて入力してください');
                 return;
             }
 
-            const result = performCalculation(loanAmount, loanPeriod, interestRate, paymentType, bonusRatio);
-            displayResults(result);
-            generateScheduleTable(result);
-            
-            // 前回計算との比較
-            if (lastCalculation) {
-                showChanges(lastCalculation, result);
-            }
-            lastCalculation = result;
+            // ローディング状態
+            isCalculating = true;
+            const btn = document.getElementById('calculateBtn');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<span class="spinner"></span><span>計算中...</span>';
+            btn.disabled = true;
 
-            // 結果表示とスムーズスクロール
-            const resultElement = document.getElementById('result');
-            resultElement.style.display = 'block';
-            
             setTimeout(() => {
-                resultElement.scrollIntoView({ 
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }, 100);
+                // 計算実行
+                const result = performCalculation(
+                    loanAmount * 10000,
+                    loanPeriod,
+                    interestRate / 100,
+                    paymentType,
+                    bonusRatio
+                );
+
+                // 結果表示
+                displayResults(result);
+                
+                // 前回との比較
+                if (lastCalculation) {
+                    showComparison(lastCalculation, result);
+                }
+                lastCalculation = result;
+
+                // スケジュール生成
+                generateSchedule(result);
+
+                // 結果セクション表示
+                const resultsSection = document.getElementById('resultsSection');
+                resultsSection.style.display = 'block';
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                // ローディング状態解除
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+                isCalculating = false;
+            }, 500);
         }
 
+        // 計算ロジック
         function performCalculation(principal, years, annualRate, paymentType, bonusRatio) {
             const monthlyRate = annualRate / 12;
             const totalMonths = years * 12;
-            
             const bonusPrincipal = principal * bonusRatio;
             const monthlyPrincipal = principal - bonusPrincipal;
-            
+
             let monthlyPayment = 0;
             let bonusPayment = 0;
             let totalPayment = 0;
             let schedule = [];
-            
+
             if (paymentType === 'equal') {
                 // 元利均等返済
                 if (monthlyRate > 0) {
                     if (monthlyPrincipal > 0) {
-                        monthlyPayment = (monthlyPrincipal * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / 
-                                        (Math.pow(1 + monthlyRate, totalMonths) - 1);
+                        const r = monthlyRate;
+                        const n = totalMonths;
+                        monthlyPayment = (monthlyPrincipal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
                     }
-                    
                     if (bonusPrincipal > 0) {
                         const bonusRate = annualRate / 2;
-                        const bonusPayments = years * 2;
-                        bonusPayment = (bonusPrincipal * bonusRate * Math.pow(1 + bonusRate, bonusPayments)) / 
-                                      (Math.pow(1 + bonusRate, bonusPayments) - 1);
+                        const bonusCount = years * 2;
+                        bonusPayment = (bonusPrincipal * bonusRate * Math.pow(1 + bonusRate, bonusCount)) / 
+                                      (Math.pow(1 + bonusRate, bonusCount) - 1);
                     }
                 } else {
                     monthlyPayment = monthlyPrincipal / totalMonths;
                     bonusPayment = bonusPrincipal / (years * 2);
                 }
-                
+
                 totalPayment = (monthlyPayment * totalMonths) + (bonusPayment * years * 2);
-                
-                // 返済スケジュール生成
+
+                // スケジュール生成（最初の12ヶ月）
                 let balance = principal;
                 for (let i = 1; i <= Math.min(12, totalMonths); i++) {
-                    const interestAmount = balance * monthlyRate;
-                    const principalAmount = monthlyPayment - interestAmount;
-                    balance -= principalAmount;
-                    
+                    const interest = balance * monthlyRate;
+                    const principalPayment = monthlyPayment - interest;
+                    balance -= principalPayment;
+
                     schedule.push({
                         month: i,
                         payment: monthlyPayment,
-                        principal: principalAmount,
-                        interest: interestAmount,
+                        principal: principalPayment,
+                        interest: interest,
                         balance: Math.max(0, balance)
                     });
                 }
-                
             } else {
                 // 元金均等返済
                 const monthlyPrincipalPayment = monthlyPrincipal / totalMonths;
-                const bonusPrincipalPayment = bonusPrincipal / (years * 2);
-                
                 let balance = principal;
+
                 for (let i = 1; i <= Math.min(12, totalMonths); i++) {
-                    const interestAmount = balance * monthlyRate;
-                    const payment = monthlyPrincipalPayment + interestAmount;
+                    const interest = balance * monthlyRate;
+                    const payment = monthlyPrincipalPayment + interest;
                     balance -= monthlyPrincipalPayment;
-                    
-                    if (i === 1) {
-                        monthlyPayment = payment;
-                    }
-                    
+
+                    if (i === 1) monthlyPayment = payment;
+
                     schedule.push({
                         month: i,
                         payment: payment,
                         principal: monthlyPrincipalPayment,
-                        interest: interestAmount,
+                        interest: interest,
                         balance: Math.max(0, balance)
                     });
                 }
-                
+
                 if (bonusPrincipal > 0) {
+                    const bonusPrincipalPayment = bonusPrincipal / (years * 2);
                     bonusPayment = bonusPrincipalPayment + (bonusPrincipal * annualRate / 2);
                 }
-                
-                // 総返済額計算
-                const avgMonthlyInterest = (monthlyPrincipal * monthlyRate * (totalMonths + 1)) / 2;
-                const totalBonusInterest = bonusPrincipal > 0 ? 
-                    (bonusPrincipal * (annualRate / 2) * (years * 2 + 1)) / 2 : 0;
-                totalPayment = principal + avgMonthlyInterest + totalBonusInterest;
+
+                const totalInterest = schedule.reduce((sum, s) => sum + s.interest, 0) * (totalMonths / 12);
+                totalPayment = principal + totalInterest;
             }
 
             const totalInterest = totalPayment - principal;
             const annualPayment = (monthlyPayment * 12) + (bonusPayment * 2);
 
             return {
-                monthlyPayment: monthlyPayment,
-                bonusPayment: bonusPayment,
-                annualPayment: annualPayment,
-                totalPayment: totalPayment,
-                totalInterest: totalInterest,
-                schedule: schedule
+                monthlyPayment,
+                bonusPayment,
+                annualPayment,
+                totalPayment,
+                totalInterest,
+                schedule
             };
         }
 
+        // 結果表示
         function displayResults(result) {
-            document.getElementById('monthlyPayment').textContent = formatCurrency(Math.round(result.monthlyPayment)) + '円';
-            document.getElementById('bonusPayment').textContent = formatCurrency(Math.round(result.bonusPayment)) + '円';
-            document.getElementById('annualPayment').textContent = formatCurrency(Math.round(result.annualPayment)) + '円';
-            document.getElementById('totalPayment').textContent = formatCurrency(Math.round(result.totalPayment)) + '円';
-            document.getElementById('totalInterest').textContent = formatCurrency(Math.round(result.totalInterest)) + '円';
+            document.getElementById('monthlyPayment').textContent = `${formatNumber(Math.round(result.monthlyPayment))}円`;
+            document.getElementById('bonusPayment').textContent = `${formatNumber(Math.round(result.bonusPayment))}円`;
+            document.getElementById('annualPayment').textContent = `${formatNumber(Math.round(result.annualPayment))}円`;
+            document.getElementById('totalPayment').textContent = `${formatNumber(Math.round(result.totalPayment))}円`;
+            document.getElementById('totalInterest').textContent = `${formatNumber(Math.round(result.totalInterest))}円`;
         }
 
-        function showChanges(previous, current) {
-            const changes = [
+        // 比較表示
+        function showComparison(previous, current) {
+            const comparisons = [
                 { id: 'monthlyChange', prev: previous.monthlyPayment, curr: current.monthlyPayment },
                 { id: 'bonusChange', prev: previous.bonusPayment, curr: current.bonusPayment },
                 { id: 'annualChange', prev: previous.annualPayment, curr: current.annualPayment },
@@ -1208,192 +1365,87 @@
                 { id: 'interestChange', prev: previous.totalInterest, curr: current.totalInterest }
             ];
 
-            changes.forEach(change => {
-                const element = document.getElementById(change.id);
-                const diff = change.curr - change.prev;
-                const percentage = change.prev !== 0 ? ((diff / change.prev) * 100).toFixed(1) : 0;
+            comparisons.forEach(comp => {
+                const element = document.getElementById(comp.id);
+                const diff = comp.curr - comp.prev;
                 
                 if (Math.abs(diff) < 100) {
+                    element.className = 'result-change change-none';
                     element.textContent = '変更なし';
-                    element.className = 'result-change change-neutral';
+                } else if (diff > 0) {
+                    element.className = 'result-change change-up';
+                    element.innerHTML = `↑ +${formatNumber(Math.round(diff))}円`;
                 } else {
-                    const arrow = diff > 0 ? '↑' : '↓';
-                    const sign = diff > 0 ? '+' : '';
-                    element.textContent = `${arrow} ${sign}${formatCurrency(Math.round(diff))}円`;
-                    element.className = `result-change ${diff > 0 ? 'change-positive' : 'change-negative'}`;
+                    element.className = 'result-change change-down';
+                    element.innerHTML = `↓ ${formatNumber(Math.round(diff))}円`;
                 }
             });
         }
 
-        function generateScheduleTable(result) {
+        // スケジュール生成
+        function generateSchedule(result) {
             const tbody = document.getElementById('scheduleBody');
             tbody.innerHTML = '';
-            
-            result.schedule.forEach((row, index) => {
+
+            result.schedule.forEach(row => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${row.month}回目</td>
-                    <td>${formatCurrency(Math.round(row.payment))}円</td>
-                    <td>${formatCurrency(Math.round(row.principal))}円</td>
-                    <td>${formatCurrency(Math.round(row.interest))}円</td>
-                    <td>${formatCurrency(Math.round(row.balance))}円</td>
+                    <td>${formatNumber(Math.round(row.payment))}円</td>
+                    <td>${formatNumber(Math.round(row.principal))}円</td>
+                    <td>${formatNumber(Math.round(row.interest))}円</td>
+                    <td>${formatNumber(Math.round(row.balance))}円</td>
                 `;
                 tbody.appendChild(tr);
             });
-            
-            // 省略表示の追加
+
+            // 省略行
             if (result.schedule.length > 0) {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td colspan="5" style="text-align: center; color: var(--text-light); padding: 20px;">
-                        ・・・ 以降省略（全${document.getElementById('loanPeriod').value * 12}回） ・・・
+                    <td colspan="5" style="text-align: center; padding: 20px; color: var(--text-muted);">
+                        ・・・ 以降省略 ・・・
                     </td>
                 `;
                 tbody.appendChild(tr);
             }
         }
 
-        function toggleComparison() {
-            const table = document.getElementById('comparisonTable');
-            const button = document.querySelector('.toggle-btn');
+        // スケジュール表示切替
+        function toggleSchedule() {
+            const wrapper = document.getElementById('scheduleWrapper');
+            const toggleText = document.getElementById('scheduleToggleText');
             
-            if (table.style.display === 'none' || table.style.display === '') {
-                table.style.display = 'block';
-                button.innerHTML = '<span class="icon icon-table"></span> 返済スケジュール非表示';
+            if (wrapper.style.display === 'block') {
+                wrapper.style.display = 'none';
+                toggleText.textContent = '返済スケジュールを表示';
             } else {
-                table.style.display = 'none';
-                button.innerHTML = '<span class="icon icon-table"></span> 返済スケジュール表示';
+                wrapper.style.display = 'block';
+                toggleText.textContent = '返済スケジュールを非表示';
             }
         }
 
-        function formatCurrency(amount) {
-            return amount.toLocaleString('ja-JP');
-        }
-
+        // ヘルプ表示
         function showHelp() {
-            const helpModal = document.createElement('div');
-            helpModal.style.cssText = `
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 10000;
-            `;
-            
-            const helpContent = document.createElement('div');
-            helpContent.style.cssText = `
-                background: white;
-                border-radius: 16px;
-                padding: 40px;
-                max-width: 600px;
-                width: 90%;
-                max-height: 80vh;
-                overflow-y: auto;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            `;
-            
-            helpContent.innerHTML = `
-                <h2 style="margin-bottom: 24px; color: var(--primary-dark);">
-                    <span class="icon icon-help"></span> 使い方ガイド
-                </h2>
-                <div style="line-height: 1.8; color: var(--text-dark);">
-                    <h3 style="margin-top: 20px; margin-bottom: 12px; color: var(--primary-color);">📝 基本的な使い方</h3>
-                    <ol style="padding-left: 20px;">
-                        <li><strong>借入希望額：</strong>10万円〜1,500万円の範囲で入力</li>
-                        <li><strong>返済期間：</strong>1年〜20年から選択</li>
-                        <li><strong>金利：</strong>年率を％で入力（通常2-4%程度）</li>
-                        <li><strong>シミュレーション実行</strong>ボタンをクリック</li>
-                    </ol>
-                    
-                    <h3 style="margin-top: 20px; margin-bottom: 12px; color: var(--primary-color);">💡 返済方法について</h3>
-                    <ul style="padding-left: 20px;">
-                        <li><strong>元利均等返済：</strong>毎月の返済額が一定。家計管理しやすい</li>
-                        <li><strong>元金均等返済：</strong>元金の返済額が一定。総利息が少ない</li>
-                    </ul>
-                    
-                    <h3 style="margin-top: 20px; margin-bottom: 12px; color: var(--primary-color);">🎯 活用のコツ</h3>
-                    <ul style="padding-left: 20px;">
-                        <li>スライダーを使って金額や金利を調整できます</li>
-                        <li>複数パターンを試算して比較しましょう</li>
-                        <li>前回との差額が自動表示されます</li>
-                    </ul>
-                </div>
-                <button onclick="this.parentElement.parentElement.remove()" style="
-                    margin-top: 30px;
-                    width: 100%;
-                    padding: 12px;
-                    background: var(--primary-color);
-                    color: white;
-                    border: none;
-                    border-radius: 8px;
-                    font-size: 16px;
-                    font-weight: 600;
-                    cursor: pointer;
-                ">閉じる</button>
-            `;
-            
-            helpModal.appendChild(helpContent);
-            document.body.appendChild(helpModal);
-            
-            helpModal.addEventListener('click', function(e) {
-                if (e.target === helpModal) {
-                    helpModal.remove();
-                }
-            });
+            const modal = document.getElementById('helpModal');
+            modal.style.display = 'flex';
         }
 
-        // 入力値の検証と自動調整
-        document.getElementById('loanAmount').addEventListener('blur', function() {
-            const value = parseFloat(this.value);
-            if (value < 10) this.value = 10;
-            if (value > 1500) this.value = 1500;
-            document.getElementById('loanAmountSlider').value = this.value;
-            document.getElementById('loanAmountDisplay').textContent = formatCurrency(this.value) + '万円';
-        });
+        // ヘルプを閉じる
+        function closeHelp() {
+            const modal = document.getElementById('helpModal');
+            modal.style.display = 'none';
+        }
 
-        document.getElementById('interestRate').addEventListener('blur', function() {
-            const value = parseFloat(this.value);
-            if (value < 0.1) this.value = 0.1;
-            if (value > 15) this.value = 15;
-            document.getElementById('interestRateSlider').value = this.value;
-            document.getElementById('interestRateDisplay').textContent = this.value + '%';
-        });
+        // 数値フォーマット
+        function formatNumber(num) {
+            return num.toLocaleString('ja-JP');
+        }
 
-        // キーボードショートカット
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'Enter') {
-                document.getElementById('loanForm').dispatchEvent(new Event('submit'));
-            }
-            if (e.key === 'Escape') {
-                const modals = document.querySelectorAll('[style*="position: fixed"]');
-                modals.forEach(modal => modal.remove());
-            }
-        });
-
-        // 初期化処理
-        window.addEventListener('load', function() {
-            setupSliders();
-            updateProgress();
-            
-            // フェードインアニメーション
-            document.body.style.opacity = '0';
-            document.body.style.transition = 'opacity 0.5s ease';
-            setTimeout(() => {
-                document.body.style.opacity = '1';
-            }, 100);
-        });
-
-        // レスポンシブ対応
-        window.addEventListener('resize', function() {
-            if (window.innerWidth <= 768) {
-                document.querySelectorAll('.result-card').forEach(card => {
-                    card.style.minHeight = 'auto';
-                });
+        // モーダル外クリックで閉じる
+        document.getElementById('helpModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeHelp();
             }
         });
     </script>
