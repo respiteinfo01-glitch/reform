@@ -893,4 +893,509 @@
                         <div class="result-change change-neutral" id="bonusChange">-</div>
                     </div>
                     <div class="result-card">
-                        <div class="result
+                        <div class="result-label">年間返済額</div>
+                        <div class="result-value" id="annualPayment">-</div>
+                        <div class="result-change change-neutral" id="annualChange">-</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">総返済額</div>
+                        <div class="result-value" id="totalPayment">-</div>
+                        <div class="result-change change-neutral" id="totalChange">-</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">利息総額</div>
+                        <div class="result-value" id="totalInterest">-</div>
+                        <div class="result-change change-neutral" id="interestChange">-</div>
+                    </div>
+                </div>
+
+                <div class="comparison-toggle">
+                    <button class="toggle-btn" onclick="toggleComparison()">
+                        <span class="icon icon-table"></span>
+                        返済スケジュール表示
+                    </button>
+                </div>
+
+                <div class="comparison-table" id="comparisonTable">
+                    <div class="table-wrapper">
+                        <table id="scheduleTable">
+                            <thead>
+                                <tr>
+                                    <th>回数</th>
+                                    <th>返済額</th>
+                                    <th>元金</th>
+                                    <th>利息</th>
+                                    <th>残高</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scheduleBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tips">
+                <h4>
+                    <span class="icon icon-lightbulb"></span>
+                    賢いリフォームローン活用のポイント
+                </h4>
+                <div class="tips-grid">
+                    <div class="tip-item">
+                        <strong>🏦 金利の比較検討</strong>
+                        複数の金融機関から見積もりを取り、最適な条件を選びましょう
+                    </div>
+                    <div class="tip-item">
+                        <strong>⏰ 返済期間の最適化</strong>
+                        月々の負担と総利息のバランスを考慮して期間を設定しましょう
+                    </div>
+                    <div class="tip-item">
+                        <strong>💰 ボーナス返済の活用</strong>
+                        安定したボーナスがある場合は、返済期間短縮に効果的です
+                    </div>
+                    <div class="tip-item">
+                        <strong>📈 金利タイプの選択</strong>
+                        固定金利と変動金利のメリット・デメリットを理解しましょう
+                    </div>
+                </div>
+            </div>
+
+            <div class="notes">
+                <h4>
+                    <span class="icon icon-info"></span>
+                    ご利用にあたっての注意事項
+                </h4>
+                <ul>
+                    <li>本シミュレーションは概算であり、実際の借入条件とは異なる場合があります</li>
+                    <li>金融機関によって審査基準や金利、手数料等が異なります</li>
+                    <li>保証料、事務手数料、団体信用生命保険料等は含まれておりません</li>
+                    <li>繰上返済手数料等、その他の費用が発生する場合があります</li>
+                    <li>実際のお借入れの際は、各金融機関の商品説明書をご確認ください</li>
+                    <li>ご返済が困難になった場合は、早めに金融機関にご相談ください</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <button class="floating-help" onclick="showHelp()">
+        <span class="icon icon-help"></span>
+    </button>
+
+    <script>
+        let lastCalculation = null;
+        
+        // スライダーと入力フィールドの同期
+        function setupSliders() {
+            // 借入額スライダー
+            const loanAmountInput = document.getElementById('loanAmount');
+            const loanAmountSlider = document.getElementById('loanAmountSlider');
+            const loanAmountDisplay = document.getElementById('loanAmountDisplay');
+            
+            loanAmountSlider.addEventListener('input', function() {
+                loanAmountInput.value = this.value;
+                loanAmountDisplay.textContent = formatCurrency(this.value) + '万円';
+                updateProgress();
+            });
+            
+            loanAmountInput.addEventListener('input', function() {
+                loanAmountSlider.value = this.value;
+                loanAmountDisplay.textContent = formatCurrency(this.value) + '万円';
+                updateProgress();
+            });
+            
+            // 金利スライダー
+            const interestRateInput = document.getElementById('interestRate');
+            const interestRateSlider = document.getElementById('interestRateSlider');
+            const interestRateDisplay = document.getElementById('interestRateDisplay');
+            
+            interestRateSlider.addEventListener('input', function() {
+                interestRateInput.value = this.value;
+                interestRateDisplay.textContent = this.value + '%';
+                updateProgress();
+            });
+            
+            interestRateInput.addEventListener('input', function() {
+                interestRateSlider.value = this.value;
+                interestRateDisplay.textContent = this.value + '%';
+                updateProgress();
+            });
+        }
+        
+        // プログレスバーの更新
+        function updateProgress() {
+            const form = document.getElementById('loanForm');
+            const inputs = form.querySelectorAll('input[required], select[required]');
+            let filled = 0;
+            
+            inputs.forEach(input => {
+                if (input.value.trim() !== '' && input.value !== '選択してください') {
+                    filled++;
+                }
+            });
+            
+            const progress = Math.round((filled / inputs.length) * 100);
+            document.getElementById('progressFill').style.width = progress + '%';
+            document.getElementById('progressValue').textContent = progress + '%';
+        }
+
+        // フォーム要素の監視
+        document.querySelectorAll('input, select').forEach(element => {
+            element.addEventListener('input', updateProgress);
+            element.addEventListener('change', updateProgress);
+        });
+
+        // フォーム送信処理
+        document.getElementById('loanForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const button = document.getElementById('calculateBtn');
+            button.classList.add('loading');
+            button.disabled = true;
+            
+            // アニメーション効果のための遅延
+            setTimeout(() => {
+                calculateLoan();
+                button.classList.remove('loading');
+                button.disabled = false;
+            }, 800);
+        });
+
+        function calculateLoan() {
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value) * 10000;
+            const loanPeriod = parseInt(document.getElementById('loanPeriod').value);
+            const interestRate = parseFloat(document.getElementById('interestRate').value) / 100;
+            const paymentType = document.getElementById('paymentType').value;
+            const bonusRatio = parseFloat(document.getElementById('bonusRatio').value) / 100;
+
+            if (!loanAmount || !loanPeriod || !interestRate) {
+                alert('すべての必須項目を入力してください。');
+                return;
+            }
+
+            const result = performCalculation(loanAmount, loanPeriod, interestRate, paymentType, bonusRatio);
+            displayResults(result);
+            generateScheduleTable(result);
+            
+            // 前回計算との比較
+            if (lastCalculation) {
+                showChanges(lastCalculation, result);
+            }
+            lastCalculation = result;
+
+            // 結果表示とスムーズスクロール
+            const resultElement = document.getElementById('result');
+            resultElement.style.display = 'block';
+            
+            setTimeout(() => {
+                resultElement.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 100);
+        }
+
+        function performCalculation(principal, years, annualRate, paymentType, bonusRatio) {
+            const monthlyRate = annualRate / 12;
+            const totalMonths = years * 12;
+            
+            const bonusPrincipal = principal * bonusRatio;
+            const monthlyPrincipal = principal - bonusPrincipal;
+            
+            let monthlyPayment = 0;
+            let bonusPayment = 0;
+            let totalPayment = 0;
+            let schedule = [];
+            
+            if (paymentType === 'equal') {
+                // 元利均等返済
+                if (monthlyRate > 0) {
+                    if (monthlyPrincipal > 0) {
+                        monthlyPayment = (monthlyPrincipal * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / 
+                                        (Math.pow(1 + monthlyRate, totalMonths) - 1);
+                    }
+                    
+                    if (bonusPrincipal > 0) {
+                        const bonusRate = annualRate / 2;
+                        const bonusPayments = years * 2;
+                        bonusPayment = (bonusPrincipal * bonusRate * Math.pow(1 + bonusRate, bonusPayments)) / 
+                                      (Math.pow(1 + bonusRate, bonusPayments) - 1);
+                    }
+                } else {
+                    monthlyPayment = monthlyPrincipal / totalMonths;
+                    bonusPayment = bonusPrincipal / (years * 2);
+                }
+                
+                totalPayment = (monthlyPayment * totalMonths) + (bonusPayment * years * 2);
+                
+                // 返済スケジュール生成
+                let balance = principal;
+                for (let i = 1; i <= Math.min(12, totalMonths); i++) {
+                    const interestAmount = balance * monthlyRate;
+                    const principalAmount = monthlyPayment - interestAmount;
+                    balance -= principalAmount;
+                    
+                    schedule.push({
+                        month: i,
+                        payment: monthlyPayment,
+                        principal: principalAmount,
+                        interest: interestAmount,
+                        balance: Math.max(0, balance)
+                    });
+                }
+                
+            } else {
+                // 元金均等返済
+                const monthlyPrincipalPayment = monthlyPrincipal / totalMonths;
+                const bonusPrincipalPayment = bonusPrincipal / (years * 2);
+                
+                let balance = principal;
+                for (let i = 1; i <= Math.min(12, totalMonths); i++) {
+                    const interestAmount = balance * monthlyRate;
+                    const payment = monthlyPrincipalPayment + interestAmount;
+                    balance -= monthlyPrincipalPayment;
+                    
+                    if (i === 1) {
+                        monthlyPayment = payment;
+                    }
+                    
+                    schedule.push({
+                        month: i,
+                        payment: payment,
+                        principal: monthlyPrincipalPayment,
+                        interest: interestAmount,
+                        balance: Math.max(0, balance)
+                    });
+                }
+                
+                if (bonusPrincipal > 0) {
+                    bonusPayment = bonusPrincipalPayment + (bonusPrincipal * annualRate / 2);
+                }
+                
+                // 総返済額計算
+                const avgMonthlyInterest = (monthlyPrincipal * monthlyRate * (totalMonths + 1)) / 2;
+                const totalBonusInterest = bonusPrincipal > 0 ? 
+                    (bonusPrincipal * (annualRate / 2) * (years * 2 + 1)) / 2 : 0;
+                totalPayment = principal + avgMonthlyInterest + totalBonusInterest;
+            }
+
+            const totalInterest = totalPayment - principal;
+            const annualPayment = (monthlyPayment * 12) + (bonusPayment * 2);
+
+            return {
+                monthlyPayment: monthlyPayment,
+                bonusPayment: bonusPayment,
+                annualPayment: annualPayment,
+                totalPayment: totalPayment,
+                totalInterest: totalInterest,
+                schedule: schedule
+            };
+        }
+
+        function displayResults(result) {
+            document.getElementById('monthlyPayment').textContent = formatCurrency(Math.round(result.monthlyPayment)) + '円';
+            document.getElementById('bonusPayment').textContent = formatCurrency(Math.round(result.bonusPayment)) + '円';
+            document.getElementById('annualPayment').textContent = formatCurrency(Math.round(result.annualPayment)) + '円';
+            document.getElementById('totalPayment').textContent = formatCurrency(Math.round(result.totalPayment)) + '円';
+            document.getElementById('totalInterest').textContent = formatCurrency(Math.round(result.totalInterest)) + '円';
+        }
+
+        function showChanges(previous, current) {
+            const changes = [
+                { id: 'monthlyChange', prev: previous.monthlyPayment, curr: current.monthlyPayment },
+                { id: 'bonusChange', prev: previous.bonusPayment, curr: current.bonusPayment },
+                { id: 'annualChange', prev: previous.annualPayment, curr: current.annualPayment },
+                { id: 'totalChange', prev: previous.totalPayment, curr: current.totalPayment },
+                { id: 'interestChange', prev: previous.totalInterest, curr: current.totalInterest }
+            ];
+
+            changes.forEach(change => {
+                const element = document.getElementById(change.id);
+                const diff = change.curr - change.prev;
+                const percentage = change.prev !== 0 ? ((diff / change.prev) * 100).toFixed(1) : 0;
+                
+                if (Math.abs(diff) < 100) {
+                    element.textContent = '変更なし';
+                    element.className = 'result-change change-neutral';
+                } else {
+                    const arrow = diff > 0 ? '↑' : '↓';
+                    const sign = diff > 0 ? '+' : '';
+                    element.textContent = `${arrow} ${sign}${formatCurrency(Math.round(diff))}円`;
+                    element.className = `result-change ${diff > 0 ? 'change-positive' : 'change-negative'}`;
+                }
+            });
+        }
+
+        function generateScheduleTable(result) {
+            const tbody = document.getElementById('scheduleBody');
+            tbody.innerHTML = '';
+            
+            result.schedule.forEach((row, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.month}回目</td>
+                    <td>${formatCurrency(Math.round(row.payment))}円</td>
+                    <td>${formatCurrency(Math.round(row.principal))}円</td>
+                    <td>${formatCurrency(Math.round(row.interest))}円</td>
+                    <td>${formatCurrency(Math.round(row.balance))}円</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            // 省略表示の追加
+            if (result.schedule.length > 0) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td colspan="5" style="text-align: center; color: var(--text-light); padding: 20px;">
+                        ・・・ 以降省略（全${document.getElementById('loanPeriod').value * 12}回） ・・・
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        function toggleComparison() {
+            const table = document.getElementById('comparisonTable');
+            const button = document.querySelector('.toggle-btn');
+            
+            if (table.style.display === 'none' || table.style.display === '') {
+                table.style.display = 'block';
+                button.innerHTML = '<span class="icon icon-table"></span> 返済スケジュール非表示';
+            } else {
+                table.style.display = 'none';
+                button.innerHTML = '<span class="icon icon-table"></span> 返済スケジュール表示';
+            }
+        }
+
+        function formatCurrency(amount) {
+            return amount.toLocaleString('ja-JP');
+        }
+
+        function showHelp() {
+            const helpModal = document.createElement('div');
+            helpModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+            `;
+            
+            const helpContent = document.createElement('div');
+            helpContent.style.cssText = `
+                background: white;
+                border-radius: 16px;
+                padding: 40px;
+                max-width: 600px;
+                width: 90%;
+                max-height: 80vh;
+                overflow-y: auto;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            `;
+            
+            helpContent.innerHTML = `
+                <h2 style="margin-bottom: 24px; color: var(--primary-dark);">
+                    <span class="icon icon-help"></span> 使い方ガイド
+                </h2>
+                <div style="line-height: 1.8; color: var(--text-dark);">
+                    <h3 style="margin-top: 20px; margin-bottom: 12px; color: var(--primary-color);">📝 基本的な使い方</h3>
+                    <ol style="padding-left: 20px;">
+                        <li><strong>借入希望額：</strong>10万円〜1,500万円の範囲で入力</li>
+                        <li><strong>返済期間：</strong>1年〜20年から選択</li>
+                        <li><strong>金利：</strong>年率を％で入力（通常2-4%程度）</li>
+                        <li><strong>シミュレーション実行</strong>ボタンをクリック</li>
+                    </ol>
+                    
+                    <h3 style="margin-top: 20px; margin-bottom: 12px; color: var(--primary-color);">💡 返済方法について</h3>
+                    <ul style="padding-left: 20px;">
+                        <li><strong>元利均等返済：</strong>毎月の返済額が一定。家計管理しやすい</li>
+                        <li><strong>元金均等返済：</strong>元金の返済額が一定。総利息が少ない</li>
+                    </ul>
+                    
+                    <h3 style="margin-top: 20px; margin-bottom: 12px; color: var(--primary-color);">🎯 活用のコツ</h3>
+                    <ul style="padding-left: 20px;">
+                        <li>スライダーを使って金額や金利を調整できます</li>
+                        <li>複数パターンを試算して比較しましょう</li>
+                        <li>前回との差額が自動表示されます</li>
+                    </ul>
+                </div>
+                <button onclick="this.parentElement.parentElement.remove()" style="
+                    margin-top: 30px;
+                    width: 100%;
+                    padding: 12px;
+                    background: var(--primary-color);
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                ">閉じる</button>
+            `;
+            
+            helpModal.appendChild(helpContent);
+            document.body.appendChild(helpModal);
+            
+            helpModal.addEventListener('click', function(e) {
+                if (e.target === helpModal) {
+                    helpModal.remove();
+                }
+            });
+        }
+
+        // 入力値の検証と自動調整
+        document.getElementById('loanAmount').addEventListener('blur', function() {
+            const value = parseFloat(this.value);
+            if (value < 10) this.value = 10;
+            if (value > 1500) this.value = 1500;
+            document.getElementById('loanAmountSlider').value = this.value;
+            document.getElementById('loanAmountDisplay').textContent = formatCurrency(this.value) + '万円';
+        });
+
+        document.getElementById('interestRate').addEventListener('blur', function() {
+            const value = parseFloat(this.value);
+            if (value < 0.1) this.value = 0.1;
+            if (value > 15) this.value = 15;
+            document.getElementById('interestRateSlider').value = this.value;
+            document.getElementById('interestRateDisplay').textContent = this.value + '%';
+        });
+
+        // キーボードショートカット
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                document.getElementById('loanForm').dispatchEvent(new Event('submit'));
+            }
+            if (e.key === 'Escape') {
+                const modals = document.querySelectorAll('[style*="position: fixed"]');
+                modals.forEach(modal => modal.remove());
+            }
+        });
+
+        // 初期化処理
+        window.addEventListener('load', function() {
+            setupSliders();
+            updateProgress();
+            
+            // フェードインアニメーション
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // レスポンシブ対応
+        window.addEventListener('resize', function() {
+            if (window.innerWidth <= 768) {
+                document.querySelectorAll('.result-card').forEach(card => {
+                    card.style.minHeight = 'auto';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
