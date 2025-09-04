@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>住宅ローン・リフォームローンシミュレーション</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Hiragino Kaku Gothic Pro', 'ヒラギノ角ゴ Pro W3', 'メイリオ', Meiryo, 'MS Pゴシック', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .loan-type {
+            margin-bottom: 30px;
+        }
+
+        .loan-type h2 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 18px;
+            border-left: 4px solid #1e3c72;
+            padding-left: 10px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #1e3c72;
+            outline: none;
+        }
+
+        .unit {
+            color: #666;
+            margin-left: 5px;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 30px 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 60, 114, 0.3);
+        }
+
+        .result {
+            background: #f8f9ff;
+            border: 2px solid #1e3c72;
+            border-radius: 8px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .result h3 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: bold;
+        }
+
+        .result-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .monthly-payment {
+            font-size: 24px !important;
+            color: #d32f2f !important;
+        }
+
+        .notes {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .notes h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .notes ul {
+            padding-left: 20px;
+        }
+
+        .notes li {
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 0;
+                box-shadow: none;
+            }
+
+            .header {
+                padding: 15px 10px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .header p {
+                font-size: 13px;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .form-group {
+                margin-bottom: 25px;
+            }
+
+            .form-group label {
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+
+            .form-group input, .form-group select {
+                padding: 12px;
+                font-size: 16px;
+                border-radius: 6px;
+            }
+
+            .calculate-btn {
+                padding: 18px;
+                font-size: 18px;
+                border-radius: 6px;
+                margin: 25px 0;
+            }
+
+            .result {
+                padding: 20px 15px;
+                border-radius: 6px;
+            }
+
+            .result h3 {
+                font-size: 18px;
+                margin-bottom: 15px;
+            }
+
+            .result-item {
+                padding: 12px 0;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .result-label {
+                font-size: 14px;
+            }
+
+            .result-value {
+                font-size: 16px;
+            }
+
+            .monthly-payment {
+                font-size: 20px !important;
+            }
+
+            .notes {
+                padding: 15px 12px;
+                font-size: 13px;
+                margin-top: 25px;
+            }
+
+            .notes h4 {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 8px;
+            }
+
+            .header h1 {
+                font-size: 18px;
+            }
+
+            .content {
+                padding: 15px 10px;
+            }
+
+            .loan-type h2 {
+                font-size: 16px;
+            }
+
+            .form-group input, .form-group select {
+                padding: 14px 10px;
+                font-size: 16px;
+            }
+
+            .calculate-btn {
+                padding: 16px;
+                font-size: 16px;
+            }
+
+            .result {
+                padding: 15px 10px;
+            }
+
+            .result-value {
+                font-size: 15px;
+            }
+
+            .monthly-payment {
+                font-size: 18px !important;
+            }
+
+            .notes {
+                padding: 12px 8px;
+                font-size: 12px;
+            }
+
+            /* タッチ操作の改善 */
+            .radio-item {
+                padding: 8px;
+                border-radius: 4px;
+                background: #f9f9f9;
+                margin-bottom: 5px;
+            }
+
+            .radio-item input[type="radio"] {
+                transform: scale(1.2);
+                margin-right: 10px;
+            }
+
+            /* フォーカス表示の改善 */
+            .form-group input:focus, .form-group select:focus {
+                border-color: #0c7475;
+                box-shadow: 0 0 0 2px rgba(12, 116, 117, 0.2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>住宅ローン・リフォームローンシミュレーション</h1>
+            <p>毎月の返済額やボーナス時の返済額を試算します</p>
+        </div>
+
+        <div class="content">
+            <div class="loan-type">
+                <h2>ローンの種類を選択</h2>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="housing" name="loanType" value="housing" checked>
+                        <label for="housing">住宅ローン</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="reform" name="loanType" value="reform">
+                        <label for="reform">リフォームローン</label>
+                    </div>
+                </div>
+            </div>
+
+            <form id="loanForm">
+                <div class="form-group">
+                    <label for="loanAmount">借入希望額 <span class="unit">（万円）</span></label>
+                    <input type="number" id="loanAmount" min="1" max="10000" step="1" value="3000" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="loanPeriod">借入期間 <span class="unit">（年）</span></label>
+                    <select id="loanPeriod" required>
+                        <option value="">選択してください</option>
+                        <option value="5">5年</option>
+                        <option value="10">10年</option>
+                        <option value="15">15年</option>
+                        <option value="20">20年</option>
+                        <option value="25">25年</option>
+                        <option value="30">30年</option>
+                        <option value="35">35年</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="interestRate">金利 <span class="unit">（年率 %）</span></label>
+                    <input type="number" id="interestRate" min="0.1" max="10" step="0.01" value="1.5" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentType">返済方法</label>
+                    <select id="paymentType" required>
+                        <option value="equal">元利均等返済</option>
+                        <option value="principal">元金均等返済</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bonusRatio">ボーナス返済割合 <span class="unit">（%）</span></label>
+                    <select id="bonusRatio">
+                        <option value="0">0%（ボーナス返済なし）</option>
+                        <option value="10">10%</option>
+                        <option value="20">20%</option>
+                        <option value="30">30%</option>
+                        <option value="40">40%</option>
+                        <option value="50">50%</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="calculate-btn">試算する</button>
+            </form>
+
+            <div id="result" class="result">
+                <h3>試算結果</h3>
+                <div class="result-item">
+                    <span class="result-label">毎月の返済額</span>
+                    <span class="result-value monthly-payment" id="monthlyPayment">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">ボーナス時加算額</span>
+                    <span class="result-value" id="bonusPayment">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">年間返済額</span>
+                    <span class="result-value" id="annualPayment">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">総返済額</span>
+                    <span class="result-value" id="totalPayment">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">利息総額</span>
+                    <span class="result-value" id="totalInterest">-</span>
+                </div>
+            </div>
+
+            <div class="notes">
+                <h4>ご注意事項</h4>
+                <ul>
+                    <li>この試算は概算であり、実際の借入条件とは異なる場合があります。</li>
+                    <li>金利は変動する可能性があります。</li>
+                    <li>保証料、手数料等は含まれておりません。</li>
+                    <li>詳細な条件については、お近くの店舗までお気軽にご相談ください。</li>
+                    <li>審査の結果、ご希望に添えない場合もございます。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loanForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value) * 10000; // 万円から円に変換
+            const loanPeriod = parseInt(document.getElementById('loanPeriod').value);
+            const interestRate = parseFloat(document.getElementById('interestRate').value) / 100;
+            const paymentType = document.getElementById('paymentType').value;
+            const bonusRatio = parseFloat(document.getElementById('bonusRatio').value) / 100;
+
+            if (!loanAmount || !loanPeriod || !interestRate) {
+                alert('すべての項目を入力してください。');
+                return;
+            }
+
+            calculateLoan(loanAmount, loanPeriod, interestRate, paymentType, bonusRatio);
+        });
+
+        function calculateLoan(principal, years, annualRate, paymentType, bonusRatio) {
+            const monthlyRate = annualRate / 12;
+            const totalMonths = years * 12;
+            
+            // ボーナス分の元金
+            const bonusPrincipal = principal * bonusRatio;
+            const monthlyPrincipal = principal - bonusPrincipal;
+            
+            let monthlyPayment = 0;
+            let bonusPayment = 0;
+            let totalPayment = 0;
+            
+            if (paymentType === 'equal') {
+                // 元利均等返済
+                if (monthlyRate > 0) {
+                    // 毎月返済分
+                    if (monthlyPrincipal > 0) {
+                        monthlyPayment = (monthlyPrincipal * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) / (Math.pow(1 + monthlyRate, totalMonths) - 1);
+                    }
+                    
+                    // ボーナス返済分（年2回）
+                    if (bonusPrincipal > 0) {
+                        const bonusRate = annualRate / 2; // 半年複利
+                        const bonusPayments = years * 2;
+                        bonusPayment = (bonusPrincipal * bonusRate * Math.pow(1 + bonusRate, bonusPayments)) / (Math.pow(1 + bonusRate, bonusPayments) - 1);
+                    }
+                } else {
+                    // 金利0%の場合
+                    monthlyPayment = monthlyPrincipal / totalMonths;
+                    bonusPayment = bonusPrincipal / (years * 2);
+                }
+                
+                totalPayment = (monthlyPayment * totalMonths) + (bonusPayment * years * 2);
+                
+            } else {
+                // 元金均等返済（簡易計算）
+                const monthlyPrincipalPayment = monthlyPrincipal / totalMonths;
+                const bonusPrincipalPayment = bonusPrincipal / (years * 2);
+                
+                // 初回返済額（最大）
+                monthlyPayment = monthlyPrincipalPayment + (monthlyPrincipal * monthlyRate);
+                bonusPayment = bonusPrincipalPayment + (bonusPrincipal * annualRate / 2);
+                
+                // 総返済額の概算
+                const monthlyInterest = (monthlyPrincipal * monthlyRate * (totalMonths + 1)) / 2;
+                const bonusInterest = (bonusPrincipal * (annualRate / 2) * (years * 2 + 1)) / 2;
+                totalPayment = principal + monthlyInterest + bonusInterest;
+            }
+
+            const totalInterest = totalPayment - principal;
+            const annualPayment = (monthlyPayment * 12) + (bonusPayment * 2);
+
+            // 結果を表示
+            document.getElementById('monthlyPayment').textContent = formatCurrency(Math.round(monthlyPayment)) + '円';
+            document.getElementById('bonusPayment').textContent = formatCurrency(Math.round(bonusPayment)) + '円';
+            document.getElementById('annualPayment').textContent = formatCurrency(Math.round(annualPayment)) + '円';
+            document.getElementById('totalPayment').textContent = formatCurrency(Math.round(totalPayment)) + '円';
+            document.getElementById('totalInterest').textContent = formatCurrency(Math.round(totalInterest)) + '円';
+
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function formatCurrency(amount) {
+            return amount.toLocaleString('ja-JP');
+        }
+
+        // ローンタイプに関する処理を削除
+        // リフォームローン固定の設定は不要
+    </script>
+</body>
+</html>
